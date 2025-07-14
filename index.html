@@ -1,0 +1,292 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resilience Catalyst</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap');
+
+        :root {
+            --bg-color: #0c0a1a; /* Midnight Blue/Black */
+            --primary-text: #e0e0e0;
+            --gold-accent: #ffd700;
+            --obsidian-gray: #343a40;
+            --glow-color: rgba(255, 215, 0, 0.7);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--primary-text);
+            font-family: 'Cinzel', serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('background-stars.png');
+            background-size: cover;
+            opacity: 0.3;
+            z-index: -1;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            padding: 2rem;
+            background: rgba(12, 10, 26, 0.8);
+            border-radius: 15px;
+            box-shadow: 0 0 20px var(--glow-color);
+            backdrop-filter: blur(5px);
+            border: 1px solid var(--gold-accent);
+        }
+
+        .screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            animation: fadeIn 1s forwards;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1, h2, h3 {
+            color: var(--gold-accent);
+            text-shadow: 0 0 5px var(--glow-color);
+        }
+        
+        p, label {
+            line-height: 1.6;
+        }
+
+        .btn {
+            background: transparent;
+            border: 1px solid var(--gold-accent);
+            color: var(--gold-accent);
+            padding: 10px 20px;
+            font-family: 'Cinzel', serif;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+            text-transform: uppercase;
+        }
+
+        .btn:hover, .btn.selected {
+            background: var(--gold-accent);
+            color: var(--bg-color);
+            box-shadow: 0 0 15px var(--glow-color);
+        }
+        
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        /* Start Screen */
+        .wheel-of-life {
+            width: 150px;
+            height: 150px;
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Challenge Screen */
+        #challenge-visualizer {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        #challenge-visualizer img {
+            position: absolute;
+            max-width: 100%;
+            max-height: 100%;
+            transition: opacity 1s, transform 1s;
+        }
+        
+        .challenge-symbol {
+            animation: pulse 4s infinite ease-in-out;
+        }
+        
+        .resource-symbol {
+             opacity: 0;
+             transform: scale(0.5);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.8; }
+        }
+
+        textarea {
+            width: 80%;
+            height: 100px;
+            background-color: var(--obsidian-gray);
+            color: var(--primary-text);
+            border: 1px solid var(--gold-accent);
+            border-radius: 5px;
+            padding: 10px;
+            font-family: Arial, sans-serif;
+        }
+        
+        /* Strategy Screen */
+        #sigil-container img {
+            width: 150px;
+            animation: glow 3s infinite alternate;
+        }
+
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 5px var(--glow-color)); }
+            to { filter: drop-shadow(0 0 20px var(--glow-color)); }
+        }
+        
+        /* Response Screen */
+        .autosuggestion {
+            font-size: 1.5rem;
+            font-style: italic;
+        }
+
+        #log-book {
+             margin-top: 2rem;
+             padding: 1rem;
+             background: var(--obsidian-gray);
+             border-radius: 10px;
+             max-height: 200px;
+             overflow-y: auto;
+             width: 100%;
+             text-align: left;
+        }
+
+        #log-book h3 {
+             text-align: center;
+        }
+        
+        .log-entry {
+            border-bottom: 1px solid var(--gold-accent);
+            padding-bottom: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Screen 1: Start -->
+        <div id="start-screen" class="screen active">
+            <h1>Resilience Catalyst</h1>
+            <p>Anticipate challenges, prepare your spirit, and neutralize their impact before they arrive. This is a space to transform fear into wisdom.</p>
+            <img src="wheel-of-life.png" alt="Wheel of Life" class="wheel-of-life">
+            <button id="start-btn" class="btn">I am ready to see what may come and act wisely.</button>
+        </div>
+
+        <!-- Screen 2: Challenge Premeditation -->
+        <div id="challenge-screen" class="screen">
+            <h2>Strategic Challenge Premeditation</h2>
+            <p>Select a potential challenge to explore. By facing it symbolically now, you build the strength to navigate it in reality.</p>
+            <div id="challenge-selection" class="btn-group">
+                <button class="btn challenge-btn" data-challenge="Betrayal">Betrayal</button>
+                <button class="btn challenge-btn" data-challenge="Poverty">Poverty</button>
+                <button class="btn challenge-btn" data-challenge="Illness">Illness</button>
+                <button class="btn challenge-btn" data-challenge="Loss">Loss</button>
+            </div>
+            
+            <div id="challenge-focus" style="display:none; width:100%; text-align:center;">
+                <div id="challenge-visualizer"></div>
+                <label for="journal-entry">What are you feeling? What could you do if this happened?</label>
+                <textarea id="journal-entry" placeholder="Connect with the feeling. Write down your initial thoughts and potential actions..."></textarea>
+                <button id="journal-submit-btn" class="btn">Continue to Strategy</button>
+            </div>
+        </div>
+
+        <!-- Screen 3: Energetic Strategy -->
+        <div id="strategy-screen" class="screen">
+            <h2>Create Your Energetic Strategy</h2>
+            <p>Choose an archetypal resource to counter this challenge. This is your tool of power.</p>
+            <div id="resource-selection" class="btn-group">
+                <button class="btn resource-btn" data-resource="Shield"><img src="shield-resource.png" alt="Shield" width="24"> Shield</button>
+                <button class="btn resource-btn" data-resource="Sword"><img src="sword-resource.png" alt="Sword" width="24"> Sword</button>
+                <button class="btn resource-btn" data-resource="Light"><img src="light-resource.png" alt="Light" width="24"> Light</button>
+                <button class="btn resource-btn" data-resource="Fire"><img src="fire-resource.png" alt="Fire" width="24"> Fire</button>
+            </div>
+            
+            <div id="confrontation-visualizer-container" style="display:none; width:100%; text-align:center;">
+                 <p id="confrontation-text"></p>
+                 <div id="confrontation-visualizer"></div>
+            </div>
+        </div>
+        
+        <!-- Screen 4: Sigil Activation -->
+        <div id="sigil-screen" class="screen">
+            <h2>Resilience Sigil Activated</h2>
+            <p>This symbol represents your victory and newfound strength. It is now part of your energetic field.</p>
+            <div id="sigil-container">
+                 <img src="sigil.png" alt="Resilience Sigil">
+            </div>
+            <button id="sigil-continue-btn" class="btn">Anchor This Victory</button>
+        </div>
+
+        <!-- Screen 5: Positive Response -->
+        <div id="response-screen" class="screen">
+            <h2>Positive Response Simulation</h2>
+            <p class="autosuggestion">"I have overcome it before it arrives."</p>
+            <p>Visualize yourself acting with calm, power, and clarity. This is your new automatic response.</p>
+             <div id="victory-ritual" style="width: 150px; height: 150px; border-radius: 50%; background: var(--gold-accent); box-shadow: 0 0 30px var(--glow-color); display: flex; justify-content: center; align-items: center;">
+                <p style="color: var(--bg-color); font-weight: bold;">VICTORY</p>
+            </div>
+            <button id="finish-btn" class="btn">Complete the Cycle</button>
+        </div>
+        
+        <!-- Screen 6: Logbook -->
+        <div id="log-screen" class="screen">
+            <h2>Log of Challenges Overcome</h2>
+            <p>Your journey of resilience is recorded here. Reflect on your growth and the strategies that empower you.</p>
+            <div id="log-book">
+                <h3>Your Journal</h3>
+                <!-- Log entries will be added here -->
+            </div>
+            <button id="restart-btn" class="btn">Begin a New Cycle</button>
+        </div>
+
+    </div>
+
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.157.0/build/three.module.js"
+            }
+        }
+    </script>
+    <script type="module" src="main.js"></script>
+</body>
+</html>
